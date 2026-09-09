@@ -1,6 +1,6 @@
 """
 train_model.py
---------------
+
 Phases 3-7: Preprocessing → TF-IDF → Train → Compare → Save
 
 What this script does, step by step:
@@ -44,7 +44,7 @@ import joblib
 import numpy as np
 
 
-# ── Paths ──────────────────────────────────────────────────────────────────
+# Paths 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAIN_PATH   = os.path.join(PROJECT_ROOT, "data", "train.ft.txt")
 TEST_PATH    = os.path.join(PROJECT_ROOT, "data", "test.ft.txt")
@@ -55,7 +55,7 @@ PIPELINE_PATH = os.path.join(MODELS_DIR, "sentiment_pipeline.joblib")
 RESULTS_PATH  = os.path.join(MODELS_DIR, "results.json")
 
 
-# ── Configuration ──────────────────────────────────────────────────────────
+#  Configuration 
 # How many training records to use.
 # The full training file has ~3.6 M reviews; 600k gives a good
 # accuracy/speed balance on a typical laptop (≈5–10 min training).
@@ -97,20 +97,20 @@ def main():
     print("  Sentiment Analysis — Model Training")
     print("="*60)
 
-    # ── Step 1: Load training data ─────────────────────────────────
+    #  Step 1: Load training data 
     print(f"\nStep 1: Loading {MAX_TRAIN_SAMPLES:,} training reviews...")
     t0 = time.time()
     train_labels, train_texts_raw, train_stats = load_fasttext_file(TRAIN_PATH, max_samples=MAX_TRAIN_SAMPLES)
     print_load_summary("Training", train_stats)
     print(f"  Loaded in {time.time()-t0:.1f}s")
 
-    # ── Step 2: Preprocessing ─────────────────────────────────────
+    #  Step 2: Preprocessing 
     print("\nStep 2: Preprocessing training texts...")
     t0 = time.time()
     train_texts_clean = preprocess_texts(train_texts_raw)
     print(f"  Preprocessed {len(train_texts_clean):,} reviews in {time.time()-t0:.1f}s")
 
-    # ── Step 3: Train / Validation split ─────────────────────────
+    # Step 3: Train / Validation split 
     print(f"\nStep 3: Splitting into train ({int((1-VAL_SPLIT)*100)}%) / validation ({int(VAL_SPLIT*100)}%)...")
     X_train_raw, X_val_raw, y_train, y_val = train_test_split(
         train_texts_clean,
@@ -122,7 +122,7 @@ def main():
     print(f"  Training split   : {len(X_train_raw):,} reviews")
     print(f"  Validation split : {len(X_val_raw):,} reviews")
 
-    # ── Step 4: TF-IDF Vectorizer ─────────────────────────────────
+    #  Step 4: TF-IDF Vectorizer 
     # Parameters explained:
     #   ngram_range=(1,2) : use single words AND two-word phrases
     #                        so "not good" is treated as one feature
@@ -149,7 +149,7 @@ def main():
     print(f"  Val matrix       : {X_val.shape}")
     print(f"  TF-IDF done in   : {time.time()-t0:.1f}s")
 
-    # ── Step 5: Train Model 1 — Logistic Regression ───────────────
+    #  Step 5: Train Model 1 — Logistic Regression 
     print("\nStep 5a: Training Logistic Regression...")
     # C=1.0 is the regularisation strength (inverse); solver='saga' is
     # efficient for large sparse datasets; max_iter=1000 ensures convergence.
@@ -159,7 +159,7 @@ def main():
     print(f"  Trained in {time.time()-t0:.1f}s")
     lr_val_results = evaluate(lr_model, X_val, y_val, "Logistic Regression — Validation")
 
-    # ── Step 6: Train Model 2 — Linear SVM ───────────────────────
+    #  Step 6: Train Model 2 — Linear SVM 
     print("\nStep 5b: Training Linear SVM...")
     # LinearSVC is fast for high-dimensional text; C=0.1 gives slight
     # regularisation that works well for text classification.
@@ -169,7 +169,7 @@ def main():
     print(f"  Trained in {time.time()-t0:.1f}s")
     svm_val_results = evaluate(svm_model, X_val, y_val, "Linear SVM — Validation")
 
-    # ── Step 7: Model Selection ────────────────────────────────────
+    #  Step 7: Model Selection 
     print("\nStep 6: Selecting best model based on validation F1-score...")
     if svm_val_results["f1"] >= lr_val_results["f1"]:
         best_model      = svm_model
@@ -182,7 +182,7 @@ def main():
 
     print(f"  Selected: {best_model_name} (Val F1: {best_val['f1']:.4f})")
 
-    # ── Step 8: Load & preprocess test data ───────────────────────
+    # Step 8: Load & preprocess test data 
     print("\nStep 7: Loading test data (untouched until now)...")
     t0 = time.time()
     test_labels, test_texts_raw, test_stats = load_fasttext_file(TEST_PATH)
@@ -197,7 +197,7 @@ def main():
     X_test = tfidf.transform(test_texts_clean)
     print(f"  Test matrix: {X_test.shape}")
 
-    # ── Step 9: Final test evaluation ─────────────────────────────
+    # Step 9: Final test evaluation 
     print(f"\nStep 8: Final evaluation of '{best_model_name}' on test data...")
     test_results = evaluate(best_model, X_test, test_labels, f"{best_model_name} — TEST SET")
 
@@ -205,7 +205,7 @@ def main():
     y_test_pred = best_model.predict(X_test)
     print(classification_report(test_labels, y_test_pred, target_names=["Negative", "Positive"]))
 
-    # ── Step 10: Save pipeline ────────────────────────────────────
+    #  Step 10: Save pipeline 
     # We save a sklearn Pipeline object that wraps both the fitted
     # TF-IDF and the model. When loaded later, calling pipeline.predict()
     # automatically preprocesses → vectorizes → predicts.
@@ -220,7 +220,7 @@ def main():
     joblib.dump(pipeline, PIPELINE_PATH)
     print(f"  Saved.")
 
-    # ── Step 11: Save results JSON ─────────────────────────────────
+    # Step 11: Save results JSON 
     results = {
         "model_used":         best_model_name,
         "train_samples_used": MAX_TRAIN_SAMPLES,
