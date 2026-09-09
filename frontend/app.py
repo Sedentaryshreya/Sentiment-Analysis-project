@@ -1,6 +1,6 @@
 """
 frontend/app.py
----------------
+
 Streamlit frontend for Sentiment Analysis on Product Reviews.
 
 Pages:
@@ -9,8 +9,6 @@ Pages:
   3. Dataset       — actual dataset statistics
   4. Model Results — actual test-set performance metrics
 
-Run from the project root:
-    streamlit run frontend/app.py
 """
 
 import os
@@ -27,13 +25,13 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from predict import predict_sentiment
 
-# ── Paths ──────────────────────────────────────────────────────────────────
+#Paths
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS_PATH = os.path.join(PROJECT_ROOT, "models", "results.json")
 VIZ_DIR      = os.path.join(PROJECT_ROOT, "visualizations")
 
 
-# ── Load results once ──────────────────────────────────────────────────────
+# Load results 
 @st.cache_data
 def load_results():
     """Load training/evaluation results from disk (cached)."""
@@ -43,24 +41,22 @@ def load_results():
         return json.load(f)
 
 
-# ── Page config ────────────────────────────────────────────────────────────
+# Page config
 st.set_page_config(
     page_title="Sentiment Analysis — Product Reviews",
     page_icon="📝",
     layout="centered",
 )
 
-# ── Sidebar navigation ─────────────────────────────────────────────────────
+#Sidebar navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
     ["🏠 Home", "🔍 Analyse Review", "📊 Dataset Insights", "📈 Model Performance"],
 )
 
-
-# ══════════════════════════════════════════════════════════════════════════
 #  PAGE 1 — HOME
-# ══════════════════════════════════════════════════════════════════════════
+
 if page == "🏠 Home":
     st.title("📝 Sentiment Analysis on Product Reviews")
     st.markdown("---")
@@ -157,10 +153,8 @@ if page == "🏠 Home":
         """
     )
 
-
-# ══════════════════════════════════════════════════════════════════════════
 #  PAGE 2 — ANALYSE REVIEW
-# ══════════════════════════════════════════════════════════════════════════
+
 elif page == "🔍 Analyse Review":
     st.title("🔍 Analyse a Product Review")
     st.markdown("Enter a product review below and click **Analyse Sentiment**.")
@@ -179,7 +173,7 @@ elif page == "🔍 Analyse Review":
     st.caption(f"Characters: {len(review_text)} / 5000")
 
     if st.button("🔎 Analyse Sentiment", type="primary"):
-        # ── Input validation ──────────────────────────────────
+        #  Input validation 
         if not review_text.strip():
             st.error("Please enter a review before clicking Analyse.")
         elif len(review_text.strip()) < 3:
@@ -262,9 +256,10 @@ elif page == "🔍 Analyse Review":
         )
 
 
-# ══════════════════════════════════════════════════════════════════════════
+
 #  PAGE 3 — DATASET INSIGHTS
-# ══════════════════════════════════════════════════════════════════════════
+
+
 elif page == "📊 Dataset Insights":
     st.title("📊 Dataset Insights")
     st.markdown("All statistics are calculated from the actual dataset files.")
@@ -277,7 +272,7 @@ elif page == "📊 Dataset Insights":
 
     ds = results["dataset"]
 
-    # ── Summary table ─────────────────────────────────────────────
+    # Summary table 
     st.subheader("Dataset Summary")
     col1, col2, col3 = st.columns(3)
     col1.metric("Training Reviews", f"{ds['train_total']:,}")
@@ -286,7 +281,7 @@ elif page == "📊 Dataset Insights":
 
     st.markdown("---")
 
-    # ── Class distribution table ──────────────────────────────────
+    # Class distribution table 
     st.subheader("Sentiment Class Distribution")
 
     col1, col2 = st.columns(2)
@@ -315,7 +310,7 @@ elif page == "📊 Dataset Insights":
 
     st.markdown("---")
 
-    # ── Bar chart (matplotlib, rendered as image) ──────────────────
+    # Bar chart (matplotlib, rendered as image) 
     st.subheader("Visualisations")
     label_img = os.path.join(VIZ_DIR, "label_distribution.png")
     length_img = os.path.join(VIZ_DIR, "length_distribution.png")
@@ -351,9 +346,8 @@ elif page == "📊 Dataset Insights":
     )
 
 
-# ══════════════════════════════════════════════════════════════════════════
 #  PAGE 4 — MODEL PERFORMANCE
-# ══════════════════════════════════════════════════════════════════════════
+
 elif page == "📈 Model Performance":
     st.title("📈 Model Performance")
     st.markdown(
@@ -372,7 +366,7 @@ elif page == "📈 Model Performance":
     lr_val = val["logistic_regression"]
     sv_val = val["linear_svm"]
 
-    # ── Model comparison (validation) ─────────────────────────────
+    #  Model comparison (validation) 
     st.subheader("Model Comparison — Validation Set")
     st.caption("Validation split: 20% of training data (120,000 reviews).")
 
@@ -411,7 +405,7 @@ elif page == "📈 Model Performance":
 
     st.markdown("---")
 
-    # ── Final test results ─────────────────────────────────────────
+    # Final test results
     st.subheader("Final Test Results — Linear SVM")
     st.caption("Evaluated on the untouched test set (400,000 reviews).")
 
@@ -423,7 +417,7 @@ elif page == "📈 Model Performance":
 
     st.markdown("---")
 
-    # ── Confusion matrix ───────────────────────────────────────────
+    # Confusion matrix
     st.subheader("Confusion Matrix")
     cm = test["confusion_matrix"]
 
@@ -465,7 +459,7 @@ elif page == "📈 Model Performance":
 
     st.markdown("---")
 
-    # ── Configuration used ─────────────────────────────────────────
+    #  Configuration used 
     st.subheader("Training Configuration")
     st.markdown(
         f"""
