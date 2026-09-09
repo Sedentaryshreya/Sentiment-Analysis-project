@@ -1,6 +1,6 @@
 """
 predict.py
-----------
+
 Loads the saved ML pipeline and predicts sentiment for a given review.
 
 The pipeline contains:
