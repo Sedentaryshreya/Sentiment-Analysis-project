@@ -354,3 +354,4 @@ Used for academic purposes only.
 
 *Project Title: Sentiment Analysis on Product Reviews Using Python*  
 *Type: B.Tech CSE Academic Project*
+Author: Shreya Gautam
