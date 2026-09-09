@@ -1,16 +1,11 @@
 """
 analyse_dataset.py
-------------------
+
 Phase 1: Dataset analysis.
 
 Loads both train.ft.txt and test.ft.txt, prints actual statistics,
 and saves simple EDA visualizations to ../visualizations/.
 
-Run from inside sentiment-analysis-project/src/:
-    python analyse_dataset.py
-
-Or from the project root:
-    python src/analyse_dataset.py
 """
 
 import os
@@ -28,7 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# ── Paths ──────────────────────────────────────────────────────────────────
+# Paths 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TRAIN_PATH   = os.path.join(PROJECT_ROOT, "data", "train.ft.txt")
 TEST_PATH    = os.path.join(PROJECT_ROOT, "data", "test.ft.txt")
@@ -134,38 +129,35 @@ def main():
     print("  Sentiment Analysis — Dataset Analysis")
     print("="*60)
 
-    # ── 1. Load training data ────────────────────────────────────────
+    #  1. Load training data 
     print("\nLoading training data (this may take a minute for 1.5 GB)...")
-    # We load up to 600,000 training reviews.
-    # The full train file has ~3.6 M lines; 600k is a representative
-    # sample that comfortably fits in RAM and gives strong model performance.
-    # The test file (400k lines) is loaded completely and kept separate.
+    
     MAX_TRAIN = 600_000
 
     train_labels, train_texts, train_stats = load_fasttext_file(TRAIN_PATH, max_samples=MAX_TRAIN)
     print_load_summary("Training", train_stats)
 
-    # ── 2. Load test data ────────────────────────────────────────────
+    # 2. Load test data 
     print("Loading test data...")
     test_labels, test_texts, test_stats = load_fasttext_file(TEST_PATH)
     print_load_summary("Test", test_stats)
 
-    # ── 3. Length statistics ────────────────────────────────────────
+    # 3. Length statistics 
     print("\nComputing review-length statistics...")
     train_lengths, _ = review_length_stats(train_texts, "Train")
     test_lengths,  _ = review_length_stats(test_texts,  "Test")
 
-    # ── 4. Sample reviews ───────────────────────────────────────────
+    #  4. Sample reviews 
     show_sample_reviews(train_texts, train_labels)
 
-    # ── 5. Preprocessing check on one example ──────────────────────
+    #  5. Preprocessing check on one example 
     example_raw = train_texts[0]
     example_clean = clean_review(example_raw)
     print(f"\n  Preprocessing example:")
     print(f"  Raw   : {example_raw[:100]}")
     print(f"  Cleaned: {example_clean[:100]}")
 
-    # ── 6. Visualizations ───────────────────────────────────────────
+    # 6. Visualizations 
     print("\nGenerating visualizations...")
     plot_label_distribution(
         train_stats, test_stats,
