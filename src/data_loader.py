@@ -1,6 +1,6 @@
 """
 data_loader.py
---------------
+
 Loads and parses the fastText-format review files.
 
 fastText format (one review per line):
@@ -54,14 +54,14 @@ def load_fasttext_file(filepath: str, max_samples: int = None):
     Load a fastText-format file and return parallel lists of labels and texts.
 
     Parameters
-    ----------
+    
     filepath    : path to the .txt file
     max_samples : if given, stop after reading this many VALID records.
                   Uses reservoir-style head sampling (first N valid records).
                   Pass None to load everything.
 
     Returns
-    -------
+    
     labels : list[int]   - 0 = Negative, 1 = Positive
     texts  : list[str]   - raw review text (before preprocessing)
     stats  : dict        - loading statistics
