@@ -1,18 +1,8 @@
 """
 backend/main.py
----------------
+
 FastAPI backend for the Sentiment Analysis project.
 
-Endpoints:
-  GET  /health   — check that the server is running
-  POST /predict  — predict sentiment of a product review
-
-Run from the project root:
-    uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
-
-Or:
-    python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
-"""
 
 import os
 import sys
@@ -26,7 +16,7 @@ from pydantic import BaseModel, field_validator
 from predict import predict_sentiment, load_pipeline
 
 
-# ── App setup ──────────────────────────────────────────────────────────────
+# App setup 
 app = FastAPI(
     title="Sentiment Analysis API",
     description=(
@@ -43,7 +33,7 @@ def startup_event():
     print("ML pipeline loaded and ready.")
 
 
-# ── Request / Response schemas ─────────────────────────────────────────────
+# Request / Response schemas 
 class PredictRequest(BaseModel):
     review: str
 
@@ -66,7 +56,7 @@ class HealthResponse(BaseModel):
     message: str
 
 
-# ── Endpoints ──────────────────────────────────────────────────────────────
+# Endpoints
 @app.get("/health", response_model=HealthResponse, tags=["health"])
 def health_check():
     """Returns OK when the backend is running and the model is loaded."""
