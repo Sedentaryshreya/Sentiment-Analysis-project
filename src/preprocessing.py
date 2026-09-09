@@ -1,6 +1,6 @@
 """
 preprocessing.py
-----------------
+
 Text cleaning for product reviews.
 
 Design decisions:
@@ -42,11 +42,11 @@ def clean_review(text: str) -> str:
     5. Strip edges
 
     Parameters
-    ----------
+    
     text : raw review string
 
     Returns
-    -------
+    
     Cleaned string, or empty string if input is None/empty.
     """
     if not text or not isinstance(text, str):
@@ -74,11 +74,11 @@ def preprocess_texts(texts: list) -> list:
     Apply clean_review to a list of review strings.
 
     Parameters
-    ----------
+    
     texts : list of raw review strings
 
     Returns
-    -------
+    
     list of cleaned review strings
     """
     return [clean_review(t) for t in texts]
