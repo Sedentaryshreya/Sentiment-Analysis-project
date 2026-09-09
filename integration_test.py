@@ -1,9 +1,6 @@
 """
 integration_test.py
--------------------
-Full end-to-end integration test.
-Run from the project root:
-    python integration_test.py
+
 """
 
 import sys, os
@@ -26,7 +23,7 @@ def check(name, got, expected):
     return tag, ok
 
 
-# ── Backend tests ──────────────────────────────────────────────────────────
+#  Backend tests 
 print("\nBackend endpoint tests:")
 tests = [
     ("GET /health",        "GET",  "/health",  None,               200),
@@ -49,7 +46,7 @@ for name, method, path, body, expected_status in tests:
     print(f"  [{tag}] {name:<28} status={r.status_code}{extra}")
 
 
-# ── Predict module tests ───────────────────────────────────────────────────
+# Predict module tests 
 print("\nPredict module tests:")
 samples = [
     ("Absolutely love this product!",                 "Positive"),
