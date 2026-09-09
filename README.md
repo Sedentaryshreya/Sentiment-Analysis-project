@@ -1,6 +1,6 @@
 # Sentiment Analysis on Product Reviews Using Python
 
-A B.Tech CSE academic project that predicts whether a product review expresses **Positive** or **Negative** sentiment using traditional machine learning.
+Sentiment Analyzer is an NLP-powered tool that automatically classifies product reviews as positive, negative, or neutral, helping businesses and researchers understand customer sentiment at scale.
 
 ---
 
